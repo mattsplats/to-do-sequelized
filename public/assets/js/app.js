@@ -16,27 +16,27 @@ $(function () {
     if (task) {
       $.post('/', {task: task}, function (data) {
         const template = `
-<li id="item_${data.insertId}" class="list-group-item">
-  <div id="text_${data.insertId}">
-    <button type="button" data-id="${data.insertId}" class="btn btn-danger delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-    <button type="button" data-id="${data.insertId}" class="btn btn-default update"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>
+<li id="item_${data.id}" class="list-group-item">
+  <div id="text_${data.id}">
+    <button type="button" data-id="${data.id}" class="btn btn-danger delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+    <button type="button" data-id="${data.id}" class="btn btn-default update"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>
     <span>&nbsp;</span>
-    <span id="task_${data.insertId}">${task}</span>
+    <span id="task_${data.id}">${task}</span>
     <div class="pull-right">
-      <button type="button" data-id="${data.insertId}" class="btn btn-success complete"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+      <button type="button" data-id="${data.id}" class="btn btn-success complete"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
     </div>
   </div>
 
-  <div id="update_${data.insertId}" class="input-group" style="display: none;">
+  <div id="update_${data.id}" class="input-group" style="display: none;">
     <span class="input-group-btn">
-      <button type="button" class="btn btn-success submitUpdate" data-id="${data.insertId}"><span class="glyphicon glyphicon-ok" aria-hidden="true"></button>
+      <button type="button" class="btn btn-success submitUpdate" data-id="${data.id}"><span class="glyphicon glyphicon-ok" aria-hidden="true"></button>
     </span>
-    <input type="text" class="form-control updateInput" id="update_input_${data.insertId}" value="${task}" maxlength="30">
+    <input type="text" class="form-control updateInput" id="update_input_${data.id}" value="${task}" maxlength="30">
   </div>
 </li>`
         
         $('#list').append(template);
-        $(`#item_${data.insertId}`).hide().slideDown({duration: SLIDE_TIME});
+        $(`#item_${data.id}`).hide().slideDown({duration: SLIDE_TIME});
         $('#new_task').val('');
       });
     }

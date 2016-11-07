@@ -2,37 +2,35 @@
 
 const express = require('express'),
       router  = express.Router(),
-      todo    = require('../models/todo.js');
+      models  = require('../models');
 
 // Display tasks
-router.get('/', function (req, res) {
-	todo.selectAll(data => {
-		res.render('index', { tasks: data });
-	});
-});
+router.get('/', (req, res) =>
+	models.Tasks.findAll().then(result => res.render('index', { tasks: result }))
+);
 
 // Add new task
-router.post('/', function (req, res) {
-	todo.createTask(req.body, data => res.json(data));
-});
+router.post('/', (req, res) =>
+	models.Tasks.create(req.body).then(result => res.json(result))
+);
 
-// Modify pending task text, or set completed
+// Modify pending task text, or set pending task to completed
 router.put('/', function (req, res) {
 	if (req.body.hasOwnProperty('task')) {
-		todo.updateTask(req.body.id, req.body.task, data => res.json(data));
+		models.Tasks.update({ task: req.body.task }, { where: { id: req.body.id }}).then(result => res.json(result));
 
 	} else {
-		todo.completeTask(req.body.id, data => res.json(data));
+		models.Tasks.update({ isComplete: true }, { where: { id: req.body.id }}).then(result => res.json(result));
 	}
 });
 
-// Delete pending task, or all completed tasks
+// Delete all completed tasks, or selected pending task
 router.delete('/', function (req, res) {
 	if (req.body.id === 'completed') {
-		todo.clearCompleted(data => res.json(data));
+		models.Tasks.destroy({ where: { isComplete: true }}).then(result => res.json(result));
 
 	} else {
-		todo.deleteTask(req.body.id, data => res.json(data));
+		models.Tasks.destroy({ where: { id: req.body.id }}).then(result => res.json(result));
 	}
 });
 

@@ -6,6 +6,7 @@ const express    = require('express'),
       bodyParser = require('body-parser'),
 
       routes     = require('./controllers/todo_controller.js'),
+      models     = require('./models'),
 
       app        = express(),
       hbs        = exphbs.create({ defaultLayout: 'main', extname: '.hbs' }),
@@ -21,6 +22,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.text());
+
+// Sequelize init
+models.sequelize.sync();
 
 // Static route
 app.use(express.static(process.cwd() + '/public'));

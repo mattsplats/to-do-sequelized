@@ -1,7 +1,7 @@
 {
-  "name": "to-do",
-  "version": "0.0.1",
-  "description": "Bootcamp Week 14 HW",
+  "name": "to-do-sequelized",
+  "version": "0.0.2",
+  "description": "Bootcamp Week 15 HW",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -22,6 +22,7 @@
     "express": "^4.14.0",
     "express-handlebars": "^3.0.0",
     "method-override": "^2.3.6",
-    "mysql": "^2.11.1"
+    "mysql": "^2.11.1",
+    "sequelize": "^3.24.8"
   }
 }
