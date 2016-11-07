@@ -1,8 +1,15 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Tasks = sequelize.define('Tasks', {
-    task: DataTypes.STRING,
-    isComplete: DataTypes.BOOLEAN
+    task: { 
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+
+    isComplete: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    }
   }, {
     classMethods: {
       associate: function(models) {
