@@ -1,6 +1,6 @@
 'use strict';
 
-// Express vars
+// Includes / static vars
 const express    = require('express'),
       exphbs     = require('express-handlebars'),
       bodyParser = require('body-parser'),
@@ -24,7 +24,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.text());
 
 // Sequelize init
-models.sequelize.sync();
+models.sequelize.sync()
+.then(() =>
+	models.Category.findOrCreate({where: { name: 'errands' }}, { include: [models.Task] }).then(() =>
+	models.Category.findOrCreate({where: { name: 'shopping' }}, { include: [models.Task] }).then(() =>
+	models.Category.findOrCreate({where: { name: 'grocery' }}, { include: [models.Task] })))
+)
 
 // Static route
 app.use(express.static(process.cwd() + '/public'));

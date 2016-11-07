@@ -11,17 +11,17 @@ $(function () {
 
   // Create new task (on click)
   $('#create').on('click', function (e) {
-    const task = $('#new_task').val().trim();
+    const desc = $('#new_task').val().trim();
 
-    if (task) {
-      $.post('/', {task: task}, function (data) {
+    if (desc) {
+      $.post('/', {desc: desc}, function (data) {
         const template = `
 <li id="item_${data.id}" class="list-group-item">
   <div id="text_${data.id}">
     <button type="button" data-id="${data.id}" class="btn btn-danger delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
     <button type="button" data-id="${data.id}" class="btn btn-default update"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>
     <span>&nbsp;</span>
-    <span id="task_${data.id}">${task}</span>
+    <span id="task_${data.id}">${desc}</span>
     <div class="pull-right">
       <button type="button" data-id="${data.id}" class="btn btn-success complete"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
     </div>
@@ -31,7 +31,7 @@ $(function () {
     <span class="input-group-btn">
       <button type="button" class="btn btn-success submitUpdate" data-id="${data.id}"><span class="glyphicon glyphicon-ok" aria-hidden="true"></button>
     </span>
-    <input type="text" class="form-control updateInput" id="update_input_${data.id}" value="${task}" maxlength="30">
+    <input type="text" class="form-control updateInput" id="update_input_${data.id}" value="${desc}" maxlength="30">
   </div>
 </li>`
         
@@ -52,13 +52,13 @@ $(function () {
   // Mark task completed
   $('#list').on('click', '.complete', function (e) {
     const id   = $(this).data('id'),
-          task = $(`#task_${id}`).text();
+          desc = $(`#task_${id}`).text();
 
     $.ajax({
         method: 'PUT',
         data: {id: id}
     }).then(function (data) {
-      const newDone = $('<li>').text(task).addClass('list-group-item');
+      const newDone = $('<li>').text(desc).addClass('list-group-item');
       $('#done').append(newDone);
       newDone.hide().slideDown({duration: SLIDE_TIME});
       $(`#item_${id}`).slideUp({duration: SLIDE_TIME, complete: $(this).remove()});
@@ -82,14 +82,14 @@ $(function () {
   // Make put request with updated task (on click)
   $('#list').on('click', '.submitUpdate', function (e) {
     const id   = $(this).data('id'),
-          task = $(`#update_input_${id}`).val().trim();
+          desc = $(`#update_input_${id}`).val().trim();
 
     if (task) {
       $.ajax({
           method: 'PUT',
-          data: {id: id, task: task}
+          data: {id: id, desc: desc}
       }).then(function (data) {
-        $(`#task_${id}`).text(task);
+        $(`#task_${id}`).text(desc);
         $(`#update_${id}`).hide();
         $(`#text_${id}`).show();
       });

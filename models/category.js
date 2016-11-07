@@ -1,21 +1,16 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-  var Tasks = sequelize.define('Tasks', {
-    task: { 
+  var Category = sequelize.define('Category', {
+    name: { 
       type: DataTypes.STRING,
       allowNull: false
-    },
-
-    isComplete: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
     }
   }, {
     classMethods: {
       associate: function(models) {
-        // associations can be defined here
+        Category.hasMany(models.Task);
       }
     }
   });
-  return Tasks;
+  return Category;
 };
