@@ -14,7 +14,8 @@ $(function () {
       $('#list').empty();
       $('#done').empty();
 
-      for (const task of data.tasks) {
+      // Add tasks to appropriate lists
+      for (const task of data) {
         if (!task.isComplete) appendTask(task);
         else {
           const newDone = $('<li>').text(task.desc).addClass('list-group-item');
@@ -22,6 +23,7 @@ $(function () {
         }
       }
 
+      // If completed tasks is not empty, show clear button
       if ($('#done').children().length > 0) $('#clear_completed').show();
       else $('#clear_completed').hide();
     });
@@ -30,10 +32,11 @@ $(function () {
 
   // Create new task (on click)
   $('#create').on('click', function (e) {
-    const desc = $('#new_task').val().trim();
+    const desc     = $('#new_task').val().trim(),
+          category = $('#category').val();
 
     if (desc) {
-      $.post('/', {desc: desc}, function (data) {
+      $.post('/', {desc: desc, category: category}, function (data) {
         appendTask(data);
 
         $(`#item_${data.id}`).hide().slideDown({duration: SLIDE_TIME});
@@ -84,7 +87,7 @@ $(function () {
     const id   = $(this).data('id'),
           desc = $(`#update_input_${id}`).val().trim();
 
-    if (task) {
+    if (desc) {
       $.ajax({
           method: 'PUT',
           data: {id: id, desc: desc}
@@ -117,9 +120,11 @@ $(function () {
 
   // Clear completed tasks list
   $('#clear_completed').on('click', function (e) {
+    const category = $('#category').val();
+
     $.ajax({
         method: 'DELETE',
-        data: {id: 'completed'}
+        data: {category: category}
     }).then(function (data) {
       $('#clear_completed').hide({duration: 100});
       $('#done').children().slideUp({duration: SLIDE_TIME});
