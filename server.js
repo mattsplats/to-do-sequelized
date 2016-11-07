@@ -24,11 +24,22 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.text());
 
 // Sequelize init
-models.sequelize.sync()
-.then(() =>
-	models.Category.findOrCreate({where: { name: 'errands' }}, { include: [models.Task] }).then(() =>
-	models.Category.findOrCreate({where: { name: 'shopping' }}, { include: [models.Task] }).then(() =>
-	models.Category.findOrCreate({where: { name: 'grocery' }}, { include: [models.Task] })))
+models.sequelize.sync().then(() =>
+	
+	// If no errands, make errands
+	models.Category.findOne({ where: { name: 'errands' } }).then(errands => {
+		if (!errands) return models.Category.create({ name: 'errands' }, { include: [models.Task] });
+	}).then(() =>
+
+	// If no shopping, make shopping
+	models.Category.findOne({ where: { name: 'shopping' } }).then(shopping => {
+		if (!shopping) return models.Category.create({ name: 'shopping' }, { include: [models.Task] });
+	})).then(() =>
+
+	// If no grocery, make grocery
+	models.Category.findOne({ where: { name: 'grocery' } }).then(grocery => {
+		if (!grocery) return models.Category.create({ name: 'grocery' }, { include: [models.Task] });
+	}))
 )
 
 // Static route

@@ -8,6 +8,25 @@ $(function () {
   if ($('#done').children().length > 0) $('#clear_completed').show();
 
 
+  // Display tasks from chosen category
+  $('#category').change(function (e) {
+    $.get(`/${$(this).val()}`, function (data) {
+      $('#list').empty();
+      $('#done').empty();
+
+      for (const task of data.tasks) {
+        if (!task.isComplete) appendTask(task);
+        else {
+          const newDone = $('<li>').text(task.desc).addClass('list-group-item');
+          $('#done').append(newDone);
+        }
+      }
+
+      if ($('#done').children().length > 0) $('#clear_completed').show();
+      else $('#clear_completed').hide();
+    });
+  });
+
 
   // Create new task (on click)
   $('#create').on('click', function (e) {
@@ -15,27 +34,8 @@ $(function () {
 
     if (desc) {
       $.post('/', {desc: desc}, function (data) {
-        const template = `
-<li id="item_${data.id}" class="list-group-item">
-  <div id="text_${data.id}">
-    <button type="button" data-id="${data.id}" class="btn btn-danger delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-    <button type="button" data-id="${data.id}" class="btn btn-default update"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>
-    <span>&nbsp;</span>
-    <span id="task_${data.id}">${desc}</span>
-    <div class="pull-right">
-      <button type="button" data-id="${data.id}" class="btn btn-success complete"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
-    </div>
-  </div>
+        appendTask(data);
 
-  <div id="update_${data.id}" class="input-group" style="display: none;">
-    <span class="input-group-btn">
-      <button type="button" class="btn btn-success submitUpdate" data-id="${data.id}"><span class="glyphicon glyphicon-ok" aria-hidden="true"></button>
-    </span>
-    <input type="text" class="form-control updateInput" id="update_input_${data.id}" value="${desc}" maxlength="30">
-  </div>
-</li>`
-        
-        $('#list').append(template);
         $(`#item_${data.id}`).hide().slideDown({duration: SLIDE_TIME});
         $('#new_task').val('');
       });
@@ -126,4 +126,30 @@ $(function () {
       setTimeout(() => $('#done').empty(), SLIDE_TIME + 100);  // Remove elements from page after timeout (otherwise animation fails)
     });
   });
+
+
+
+  function appendTask (data) {
+    const template = `
+<li id="item_${data.id}" class="list-group-item">
+  <div id="text_${data.id}">
+    <button type="button" data-id="${data.id}" class="btn btn-danger delete"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+    <button type="button" data-id="${data.id}" class="btn btn-default update"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>
+    <span>&nbsp;</span>
+    <span id="task_${data.id}">${data.desc}</span>
+    <div class="pull-right">
+      <button type="button" data-id="${data.id}" class="btn btn-success complete"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+    </div>
+  </div>
+
+  <div id="update_${data.id}" class="input-group" style="display: none;">
+    <span class="input-group-btn">
+      <button type="button" class="btn btn-success submitUpdate" data-id="${data.id}"><span class="glyphicon glyphicon-ok" aria-hidden="true"></button>
+    </span>
+    <input type="text" class="form-control updateInput" id="update_input_${data.id}" value="${data.desc}" maxlength="30">
+  </div>
+</li>`;
+
+    $('#list').append(template);
+  }
 });

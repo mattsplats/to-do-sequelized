@@ -4,10 +4,23 @@ const express = require('express'),
       router  = express.Router(),
       models  = require('../models');
 
-// Display tasks
-router.get('/', (req, res) =>
-	models.Task.findAll().then(tasks => models.Category.findAll().then(categories => res.render('index', { tasks: tasks, categories: categories })))
-);
+// Display page
+router.get('/', (req, res) => {
+	models.Category.findAll().then(categories =>
+		categories[0].getTasks().then(tasks =>
+			res.render('index', { tasks: tasks, categories: categories })
+		)
+	)
+});
+
+// Get tasks for category
+router.get('/:category', (req, res) => {
+	models.Category.findOne({ where: { name: req.params.category } }).then(category =>
+		category.getTasks().then(tasks =>
+			res.json({ tasks: tasks })
+		)
+	)
+});
 
 // Add new task
 router.post('/', (req, res) =>
