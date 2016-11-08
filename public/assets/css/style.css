@@ -16,6 +16,11 @@ body, h1, h2 {
 	font-weight: 800;
 }
 
+select {
+	border-radius: 4px; 
+	border: 1px solid #AAA;
+}
+
 .jumbotron {
 	background-color: white;
 }

@@ -39,6 +39,11 @@ models.sequelize.sync().then(() =>
 	// If no grocery, make grocery
 	models.Category.findOne({ where: { name: 'grocery' } }).then(grocery => {
 		if (!grocery) return models.Category.create({ name: 'grocery' }, { include: [models.Task] });
+	})).then(() =>
+
+	// If no grocery, make grocery
+	models.Category.findOne({ where: { name: 'other' } }).then(grocery => {
+		if (!grocery) return models.Category.create({ name: 'other' }, { include: [models.Task] });
 	}))
 )
 
